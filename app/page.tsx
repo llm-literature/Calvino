@@ -1,5 +1,5 @@
-import LandingPage from '@/app/components/LandingPage'
-import SetLanguage from '@/app/components/SetLanguage'
+import LandingPage from '@/app/framework/LandingPage'
+import SetLanguage from '@/app/framework/SetLanguage'
 
 export default function Home() {
   return (

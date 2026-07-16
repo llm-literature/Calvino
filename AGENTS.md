@@ -4,7 +4,7 @@ This document provides context and instructions for AI agents working on the **C
 
 ## 1. Project Overview
 
-**Calvino** is a web application dedicated to Italo Calvino's "Invisible Cities". It serves as a digital archive and visualization of the cities described in the book.
+**Calvino** is an extensible web application celebrating Italo Calvino through independent digital experiments. "Invisible Cities" is the first work; future works such as "Mr Palomar" are added as separate experiences rather than extensions of the existing one.
 
 - **Repository**: `llm-literature/calvino`
 - **Type**: Static Web Application (Next.js SSG)
@@ -26,11 +26,11 @@ This document provides context and instructions for AI agents working on the **C
 ```
 calvino/
 ├── app/                    # Next.js App Router directory
-│   ├── city/               # City-related routes
-│   │   ├── [cityType]/     # Dynamic route for city categories
-│   │   │   └── [cityName]/ # Dynamic route for specific cities
-│   │   └── page.tsx        # City listing page
-│   ├── components/         # Application-specific components (Business Logic)
+│   ├── framework/          # The "1": landing page, work registry, language, shell
+│   ├── works/              # The "N": isolated creative implementations
+│   │   └── invisible-cities/
+│   │       ├── [cityType]/ # Work-owned routes
+│   │       └── components/ # Work-owned UI and creative logic
 │   ├── globals.css         # Global styles & Tailwind v4 theme configuration
 │   ├── layout.tsx          # Root layout (Server Component)
 │   └── page.tsx            # Landing page
@@ -38,8 +38,8 @@ calvino/
 │   └── ui/                 # Shadcn UI primitives (Button, Avatar, etc.)
 ├── lib/                    # Utility functions (cn, etc.)
 ├── public/                 # Static assets
-│   └── city/
-│       └── data.json       # Data source for cities
+│   └── works/
+│       └── invisible-cities/ # Work-owned data and images
 ├── tailwind.config.ts      # Tailwind configuration (Legacy/Hybrid)
 ├── next.config.js          # Next.js configuration
 └── package.json            # Dependencies and scripts
@@ -79,6 +79,16 @@ bun run lint
 
 ## 5. Coding Conventions & Guidelines
 
+### 1 + N Architecture (Non-negotiable)
+
+- `app/framework/` is the **1**: the Calvino application shell only. It owns the landing page, work registry, top-level language behavior, shared metadata, and truly global primitives.
+- `app/works/<work-slug>/` is each **N**: a complete, isolated creative implementation for one literary work. Routes, components, visual systems, local utilities, and work-specific behavior stay inside that directory.
+- `public/works/<work-slug>/` contains that work's data and media.
+- Register a new work in `app/framework/works.ts`, then build it in new `app/works/<work-slug>/` and `public/works/<work-slug>/` directories.
+- Do not import code from one work into another. These experiences intentionally do not share creative UI or business logic.
+- Promote code into `app/framework/`, `components/ui/`, or `lib/` only when it is genuinely platform-wide and already needed by more than one work. Do not create speculative abstractions for future works.
+- A work may establish its own typography, color, motion, navigation, and component conventions without affecting other works.
+
 ### Styling (Tailwind CSS v4)
 
 - Use **Tailwind CSS v4** syntax.
@@ -95,8 +105,8 @@ bun run lint
 ### Data Fetching
 
 - The project uses **Static Site Generation (SSG)**.
-- City data is sourced from `public/city/data.json`.
-- Dynamic routes (`app/city/[cityType]/[cityName]/page.tsx`) use `generateStaticParams` to pre-render all city pages at build time.
+- Invisible Cities data is sourced from `public/works/invisible-cities/data.json`.
+- Dynamic routes (`app/works/invisible-cities/[cityType]/[cityName]/page.tsx`) use `generateStaticParams` to pre-render all city pages at build time.
 - **Important**: In Next.js 15/16, route `params` are asynchronous. Always `await params` in dynamic pages.
 
 ### Image Handling
@@ -114,7 +124,7 @@ bun run lint
 
 ### Updating City Data
 
-1.  Modify `public/city/data.json`.
+1.  Modify `public/works/invisible-cities/data.json`.
 2.  Run `bun run build` to regenerate the static pages.
 
 ### Modifying Global Theme
