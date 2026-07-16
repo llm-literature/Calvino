@@ -9,6 +9,7 @@ import { useLanguage } from '@/app/context/LanguageContext'
 import { City } from '@/lib/types'
 import { cityDirections } from '../art-direction'
 import { cityScenes } from '../scenes/CityScenes'
+import { normalizeCityText } from '../text'
 
 export default function CityExperience({
   city,
@@ -24,9 +25,7 @@ export default function CityExperience({
   const { language } = useLanguage()
   const direction = cityDirections[city.name.toLowerCase()]
   const isCn = language === 'cn'
-  // A few source passages contain literal backslash-n markers inherited from
-  // print-layout line wrapping. They are not semantic paragraph breaks.
-  const description = (isCn ? city.cnDescription : city.enDescription).replace(/\\n/g, '')
+  const description = normalizeCityText(isCn ? city.cnDescription : city.enDescription)
   const displayName = isCn ? city.cnName : city.name
   const signal = isCn ? direction.cnSignal : direction.signal
   const Scene = cityScenes[city.name.toLowerCase()]
@@ -63,22 +62,28 @@ export default function CityExperience({
           <Scene cn={isCn} />
         </section>
 
-        <div className={`grid min-h-[70vh] ${direction.motif === 'split' || direction.motif === 'mirror' ? 'md:grid-cols-2' : 'md:grid-cols-[1.3fr_0.7fr]'}`}>
-          <motion.div
-            initial={{ clipPath: 'inset(0 100% 0 0)' }}
-            animate={{ clipPath: 'inset(0 0 0 0)' }}
+        <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-5 py-12 md:grid-cols-[minmax(260px,420px)_minmax(0,1fr)] md:items-start md:px-10 md:py-20 lg:gap-20 lg:px-16">
+          <motion.figure
+            initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
+            animate={{ clipPath: 'inset(0 0 0 0)', opacity: 1 }}
             transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-            className={`relative min-h-[52vh] overflow-hidden border-b border-current md:border-r md:border-b-0 ${direction.motif === 'mirror' ? 'after:absolute after:inset-x-0 after:top-1/2 after:h-1/2 after:bg-[linear-gradient(transparent,var(--city-accent))] after:opacity-25' : ''}`}
+            className="w-full max-w-[420px] justify-self-center md:sticky md:top-8"
           >
-            <Image src={imageUrl} alt="" fill priority className="object-cover grayscale contrast-125 mix-blend-multiply" />
-            <div className="absolute inset-0 opacity-20 mix-blend-color" style={{ background: direction.accent }} />
-          </motion.div>
+            <div className="relative aspect-[4/3] max-h-[320px] overflow-hidden border border-current bg-black/5">
+              <Image src={imageUrl} alt="" fill priority className="object-cover grayscale contrast-125 mix-blend-multiply" />
+              <div className="absolute inset-0 opacity-15 mix-blend-color" style={{ background: direction.accent }} />
+            </div>
+            <figcaption className="mt-3 flex justify-between text-[9px] font-black tracking-[0.16em] uppercase opacity-60">
+              <span>{city.name}</span>
+              <span>{city.type}</span>
+            </figcaption>
+          </motion.figure>
 
-          <div className="relative flex items-center p-6 md:p-10 lg:p-14">
+          <div className="relative flex items-start md:pt-2">
             <div className="prose-city max-w-xl text-base leading-[1.8] font-medium md:text-lg">
               <ReactMarkdown>{description}</ReactMarkdown>
             </div>
-            <span className="absolute right-4 bottom-3 text-[9px] font-black tracking-[0.2em] uppercase opacity-50">{direction.motif}</span>
+            <span className="absolute right-0 bottom-0 text-[9px] font-black tracking-[0.2em] uppercase opacity-50">{direction.motif}</span>
           </div>
         </div>
 
