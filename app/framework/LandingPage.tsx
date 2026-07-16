@@ -16,7 +16,6 @@ const copy = {
     index: '作品索引',
     enter: '进入作品',
     soon: '构建中',
-    note: '阅读结束的地方，另一座世界开始生长。',
     language: 'EN',
   },
   en: {
@@ -26,7 +25,6 @@ const copy = {
     index: 'Works index',
     enter: 'Enter the work',
     soon: 'In construction',
-    note: 'Where reading ends, another world begins to grow.',
     language: '中文',
   },
 }
@@ -45,7 +43,7 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="calvino-home min-h-screen bg-[#f0efea] text-[#11110f]">
+    <div className="calvino-home flex h-svh flex-col overflow-hidden bg-[#f0efea] text-[#11110f]">
       <header className="grid grid-cols-[1fr_auto] items-start border-b border-black px-4 py-4 md:grid-cols-3 md:px-7">
         <Link href="/" className="font-display text-xl font-black tracking-[-0.06em] md:text-2xl">
           CALVINO®
@@ -72,39 +70,34 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main>
-        <section className="relative overflow-hidden border-b border-black px-4 pt-10 pb-8 md:px-7 md:pt-14">
+      <main className="grid min-h-0 flex-1 grid-rows-[minmax(0,1.55fr)_minmax(0,1fr)] md:grid-cols-[minmax(0,1.35fr)_minmax(22rem,0.65fr)] md:grid-rows-1">
+        <section className="relative flex min-h-0 flex-col overflow-hidden border-b border-black px-4 pt-5 pb-4 md:border-r md:border-b-0 md:px-7 md:pt-8 md:pb-6">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative z-20 max-w-5xl text-[clamp(2.4rem,7vw,7.4rem)] leading-[0.88] font-black tracking-[-0.075em]"
+            className="relative z-20 shrink-0 text-[clamp(2rem,5.8vw,6.2rem)] leading-[1.02] font-black tracking-[-0.075em]"
           >
             {text.lead}
             <br />
             <span className="text-[#ee3b20]">{text.leadAccent}</span>
           </motion.p>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(300px,0.58fr)] md:items-end">
-            <div className="relative aspect-[16/9] overflow-hidden bg-black md:aspect-[2/1]">
-              <Image
-                src={featured.image!}
-                alt="Valdrada, a city reflected over water"
-                fill
-                priority
-                className="object-cover contrast-125 grayscale transition duration-700 hover:scale-105 hover:grayscale-0"
-              />
-              <div className="absolute inset-0 bg-[#ee3b20]/20 mix-blend-multiply" />
-              <span className="absolute top-3 left-3 bg-[#f0efea] px-2 py-1 text-[10px] font-black tracking-[0.18em]">
-                EXP. {featured.number}
-              </span>
-            </div>
-            <p className="max-w-md text-sm leading-relaxed font-semibold md:pb-1 md:text-base">
-              {text.note}
-            </p>
+          <div className="relative mt-5 min-h-0 flex-1 overflow-hidden bg-black md:mt-7">
+            <Image
+              src={featured.image!}
+              alt="Valdrada, a city reflected over water"
+              fill
+              priority
+              className="object-cover contrast-125 grayscale transition duration-700 hover:scale-105 hover:grayscale-0"
+            />
+            <div className="absolute inset-0 bg-[#ee3b20]/20 mix-blend-multiply" />
+            <span className="absolute top-3 left-3 bg-[#f0efea] px-2 py-1 text-[10px] font-black tracking-[0.18em]">
+              EXP. {featured.number}
+            </span>
           </div>
         </section>
 
-        <section aria-labelledby="works-title">
+        <section className="flex min-h-0 flex-col" aria-labelledby="works-title">
           <div className="flex items-center justify-between border-b border-black px-4 py-3 md:px-7">
             <h2 id="works-title" className="text-[10px] font-black tracking-[0.22em] uppercase">
               {text.index}
@@ -112,27 +105,28 @@ export default function LandingPage() {
             <ArrowDownRight className="h-4 w-4" />
           </div>
 
-          {works.map((work) => {
+          <div className="grid min-h-0 flex-1 grid-cols-2 md:grid-cols-1 md:grid-rows-2">
+            {works.map((work) => {
             const title = work.title[language]
             const content = (
-              <div className="group grid min-h-44 grid-cols-[3.5rem_1fr] border-b border-black transition-colors md:grid-cols-[6rem_1fr_auto]">
-                <div className="flex items-start justify-center border-r border-black py-5 text-xs font-black">
+              <div className="group grid h-full min-h-0 grid-cols-[2.5rem_1fr] border-r border-black transition-colors md:grid-cols-[4rem_1fr_auto] md:border-r-0 md:border-b">
+                <div className="flex items-start justify-center border-r border-black py-3 text-[10px] font-black md:py-4">
                   {work.number}
                 </div>
-                <div className="flex flex-col justify-between p-5 md:p-7">
+                <div className="flex min-w-0 flex-col justify-between p-3 md:p-5">
                   <p className="text-[10px] font-bold tracking-[0.18em] uppercase">
                     {work.originalTitle} / {work.year}
                   </p>
-                  <h3 className="mt-8 text-[clamp(2rem,5.3vw,5.8rem)] leading-[0.88] font-black tracking-[-0.065em] uppercase">
+                  <h3 className="mt-2 text-[clamp(1.35rem,2.4vw,2.4rem)] leading-[0.88] font-black tracking-[-0.065em] uppercase">
                     {title}
                   </h3>
                 </div>
-                <div className="col-start-2 flex items-end justify-between px-5 pb-5 md:col-start-3 md:flex-col md:items-end md:p-7">
-                  <span className="text-[10px] font-black tracking-[0.16em] uppercase">
+                <div className="col-start-2 flex items-end justify-between px-3 pb-3 md:col-start-3 md:flex-col md:items-end md:p-5">
+                  <span className="text-[9px] font-black tracking-[0.12em] uppercase md:text-[10px] md:tracking-[0.16em]">
                     {work.status === 'available' ? text.enter : text.soon}
                   </span>
                   {work.status === 'available' && (
-                    <ArrowUpRight className="h-8 w-8 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 md:h-12 md:w-12" />
+                    <ArrowUpRight className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 md:h-9 md:w-9" />
                   )}
                 </div>
               </div>
@@ -151,7 +145,8 @@ export default function LandingPage() {
                 {content}
               </div>
             )
-          })}
+            })}
+          </div>
         </section>
       </main>
     </div>
