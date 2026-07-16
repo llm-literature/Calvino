@@ -7,7 +7,9 @@ export function generateStaticParams() {
 
 function getCityData(cityType: string, cityName: string) {
   const index = data.cities.findIndex(
-    (city) => city.type.toLowerCase() === cityType.toLowerCase() && city.name.toLowerCase() === cityName.toLowerCase()
+    (city) =>
+      city.type.toLowerCase() === cityType.toLowerCase() &&
+      city.name.toLowerCase() === cityName.toLowerCase()
   )
   if (index === -1) return null
   return {
@@ -17,7 +19,11 @@ function getCityData(cityType: string, cityName: string) {
   }
 }
 
-export default async function CityPage({ params }: { params: Promise<{ cityType: string; cityName: string }> }) {
+export default async function CityPage({
+  params,
+}: {
+  params: Promise<{ cityType: string; cityName: string }>
+}) {
   const { cityType, cityName } = await params
   const cityData = getCityData(cityType, cityName)
   if (!cityData) return <div>City not found</div>

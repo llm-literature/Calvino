@@ -91,7 +91,7 @@ export default function LandingPage() {
                 alt="Valdrada, a city reflected over water"
                 fill
                 priority
-                className="object-cover grayscale contrast-125 transition duration-700 hover:scale-105 hover:grayscale-0"
+                className="object-cover contrast-125 grayscale transition duration-700 hover:scale-105 hover:grayscale-0"
               />
               <div className="absolute inset-0 bg-[#ee3b20]/20 mix-blend-multiply" />
               <span className="absolute top-3 left-3 bg-[#f0efea] px-2 py-1 text-[10px] font-black tracking-[0.18em]">
