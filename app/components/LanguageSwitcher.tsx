@@ -7,12 +7,17 @@ import { cn } from '@/lib/utils'
 export default function LanguageSwitcher({ className }: { className?: string }) {
   const { language, setLanguage } = useLanguage()
 
+  const selectLanguage = (selectedLanguage: 'cn' | 'en') => {
+    localStorage.setItem('languagePreference', selectedLanguage)
+    setLanguage(selectedLanguage)
+  }
+
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => setLanguage('cn')}
+        onClick={() => selectLanguage('cn')}
         className={cn(
           'font-serif transition-colors',
           language === 'cn' ? 'font-bold text-amber-600' : 'text-stone-500 hover:text-stone-900'
@@ -24,7 +29,7 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => setLanguage('en')}
+        onClick={() => selectLanguage('en')}
         className={cn(
           'font-serif transition-colors',
           language === 'en' ? 'font-bold text-amber-600' : 'text-stone-500 hover:text-stone-900'

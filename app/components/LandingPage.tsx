@@ -30,6 +30,11 @@ export default function LandingPage() {
   const [isHoveringBook, setIsHoveringBook] = useState(false)
   const { language, setLanguage } = useLanguage()
 
+  const selectLanguage = (selectedLanguage: 'cn' | 'en') => {
+    localStorage.setItem('languagePreference', selectedLanguage)
+    setLanguage(selectedLanguage)
+  }
+
   // Pre-generate stars deterministically
   const stars = useMemo(() => generateStars(100), [])
 
@@ -94,25 +99,27 @@ export default function LandingPage() {
       >
         {/* Creative Language Switcher */}
         <div className="flex items-center gap-2 font-mono text-xs tracking-widest text-white/30">
-          <button
-            onClick={() => setLanguage('cn')}
+          <Link
+            href="/"
+            onClick={() => selectLanguage('cn')}
             className={cn(
               'transition-colors duration-300 hover:text-white',
               language === 'cn' ? 'font-bold text-white' : ''
             )}
           >
             CN
-          </button>
+          </Link>
           <span>/</span>
-          <button
-            onClick={() => setLanguage('en')}
+          <Link
+            href="/en"
+            onClick={() => selectLanguage('en')}
             className={cn(
               'transition-colors duration-300 hover:text-white',
               language === 'en' ? 'font-bold text-white' : ''
             )}
           >
             EN
-          </button>
+          </Link>
         </div>
 
         <Link

@@ -4,7 +4,7 @@ import SetLanguage from '@/app/components/SetLanguage'
 export default function Home() {
   return (
     <>
-      <SetLanguage lang="cn" />
+      <SetLanguage lang="auto" />
       <LandingPage />
     </>
   )
