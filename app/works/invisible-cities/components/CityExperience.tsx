@@ -7,55 +7,8 @@ import { motion } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import { useLanguage } from '@/app/context/LanguageContext'
 import { City } from '@/lib/types'
-import { cityDirections, type Motif } from '../art-direction'
-
-function MotifField({ motif, accent }: { motif: Motif; accent: string }) {
-  const lines = Array.from({ length: 12 })
-  const cells = Array.from({ length: 18 })
-
-  if (motif === 'mirror') {
-    return <div className="absolute inset-x-0 top-1/2 h-1/2 scale-y-[-1] border-t opacity-30 backdrop-blur-sm" />
-  }
-  if (motif === 'network' || motif === 'maze') {
-    return (
-      <div className="absolute inset-0 opacity-35">
-        {lines.map((_, index) => (
-          <i
-            key={index}
-            className="absolute top-1/2 left-1/2 h-px w-[130%] origin-left"
-            style={{ background: accent, transform: `rotate(${index * 29}deg) translateX(-12%)` }}
-          />
-        ))}
-      </div>
-    )
-  }
-  if (motif === 'vertical') {
-    return (
-      <div className="absolute inset-0 flex justify-around opacity-35">
-        {lines.map((_, index) => <i key={index} className="h-full w-px" style={{ background: accent }} />)}
-      </div>
-    )
-  }
-  if (motif === 'orbit') {
-    return (
-      <div className="absolute top-1/2 left-1/2 aspect-square w-[80vmin] -translate-1/2 rounded-full border opacity-40" style={{ borderColor: accent }}>
-        <div className="absolute inset-[18%] rounded-full border" />
-        <div className="absolute inset-[36%] rounded-full border" />
-      </div>
-    )
-  }
-  if (motif === 'crowd' || motif === 'specimen') {
-    return (
-      <div className="absolute inset-0 grid grid-cols-6 gap-3 p-5 opacity-25 md:grid-cols-9">
-        {cells.map((_, index) => <i key={index} className="aspect-square rounded-full border" style={{ borderColor: accent }} />)}
-      </div>
-    )
-  }
-  if (motif === 'machine') {
-    return <div className="absolute inset-[-20%] opacity-20 [background:repeating-linear-gradient(90deg,transparent_0_6vw,currentColor_6vw_6.1vw)]" />
-  }
-  return <div className="absolute top-1/2 left-1/2 h-[65vmin] w-[65vmin] -translate-1/2 rotate-45 border opacity-30" style={{ borderColor: accent }} />
-}
+import { cityDirections } from '../art-direction'
+import { cityScenes } from '../scenes/CityScenes'
 
 export default function CityExperience({
   city,
@@ -74,14 +27,13 @@ export default function CityExperience({
   const description = isCn ? city.cnDescription : city.enDescription
   const displayName = isCn ? city.cnName : city.name
   const signal = isCn ? direction.cnSignal : direction.signal
+  const Scene = cityScenes[city.name.toLowerCase()]
 
   return (
     <article
       className={`city-experience motif-${direction.motif} relative min-h-screen overflow-hidden`}
       style={{ color: direction.ink, background: direction.paper, '--city-accent': direction.accent } as React.CSSProperties}
     >
-      <MotifField motif={direction.motif} accent={direction.accent} />
-
       <header className="relative z-20 grid grid-cols-[1fr_auto_1fr] items-center border-b border-current px-4 py-3 text-[10px] font-black tracking-[0.18em] uppercase md:px-7">
         <Link href="/works/invisible-cities" className="flex items-center gap-2 hover:opacity-50">
           <Grid2X2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Atlas</span>
@@ -104,6 +56,10 @@ export default function CityExperience({
             {displayName}
           </motion.h1>
         </div>
+
+        <section aria-label={isCn ? `${displayName} 创意场景` : `${displayName} creative scene`} className="h-[72vh] min-h-[560px] border-b border-current">
+          <Scene cn={isCn} />
+        </section>
 
         <div className={`grid min-h-[70vh] ${direction.motif === 'split' || direction.motif === 'mirror' ? 'md:grid-cols-2' : 'md:grid-cols-[1.3fr_0.7fr]'}`}>
           <motion.div
