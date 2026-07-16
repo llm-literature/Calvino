@@ -207,6 +207,57 @@
   }
 }
 
+.city-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: right 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.city-stage[data-reading='open'] {
+  right: min(34vw, 520px);
+}
+
+.city-reader {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  z-index: 45;
+  display: grid;
+  width: min(34vw, 520px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  border-left: 1px solid currentColor;
+  background: color-mix(in srgb, var(--city-paper) 96%, transparent);
+  backdrop-filter: blur(18px);
+  transform: translateX(calc(100% - 44px));
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.city-reader[data-reading='open'] {
+  transform: translateX(0);
+}
+
+@media (width < 768px) {
+  .city-stage[data-reading='open'] {
+    right: 0;
+    bottom: min(42svh, 360px);
+  }
+
+  .city-reader {
+    inset: auto 0 0;
+    width: 100%;
+    height: min(42svh, 360px);
+    border-top: 1px solid currentColor;
+    border-left: 0;
+    transform: translateY(calc(100% - 40px));
+  }
+
+  .city-reader[data-reading='open'] {
+    transform: translateY(0);
+  }
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

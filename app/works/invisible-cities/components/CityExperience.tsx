@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, Grid2X2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Grid2X2, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import { useLanguage } from '@/app/context/LanguageContext'
@@ -25,6 +25,7 @@ export default function CityExperience({
 }) {
   const { language } = useLanguage()
   const [pageIndex, setPageIndex] = useState(0)
+  const [readingOpen, setReadingOpen] = useState(false)
   const direction = cityDirections[city.name.toLowerCase()]
   const isCn = language === 'cn'
   const displayName = isCn ? city.cnName : city.name
@@ -50,6 +51,7 @@ export default function CityExperience({
       </header>
 
       <main className="relative h-[calc(100svh-2.5rem)] overflow-hidden">
+        <div className="city-stage" data-reading={readingOpen ? 'open' : 'closed'}>
         <div className="absolute inset-0 z-0">
           <Scene cn={isCn} />
         </div>
@@ -81,13 +83,26 @@ export default function CityExperience({
           </figcaption>
         </motion.figure>
 
-        <section className="absolute right-3 bottom-3 left-3 z-40 max-h-[44%] border border-current bg-[color-mix(in_srgb,var(--city-paper)_92%,transparent)] shadow-[8px_8px_0_var(--city-accent)] backdrop-blur-xl md:right-auto md:bottom-5 md:left-6 md:w-[min(47vw,680px)] md:max-h-[48%]">
-          <div className="flex items-center justify-between border-b border-current px-4 py-2 text-[8px] font-black tracking-[0.16em] uppercase">
-            <span>{isCn ? '城市文本' : 'City text'}</span>
-            <span>{String(safePageIndex + 1).padStart(2, '0')} / {String(pages.length).padStart(2, '0')}</span>
-          </div>
+        {prevCity ? (
+          <Link href={`/works/invisible-cities/${prevCity.type}/${prevCity.name}`} aria-label={`Previous city: ${prevCity.name}`} className="absolute top-1/2 left-0 z-40 hidden -translate-y-1/2 border border-l-0 border-current bg-[var(--city-paper)] p-3 transition hover:bg-[var(--city-accent)] md:block"><ArrowLeft className="h-4 w-4" /></Link>
+        ) : null}
+        {nextCity ? (
+          <Link href={`/works/invisible-cities/${nextCity.type}/${nextCity.name}`} aria-label={`Next city: ${nextCity.name}`} className="absolute top-1/2 right-0 z-40 hidden -translate-y-1/2 border border-r-0 border-current bg-[var(--city-paper)] p-3 transition hover:bg-[var(--city-accent)] md:block"><ArrowRight className="h-4 w-4" /></Link>
+        ) : null}
+        </div>
 
-          <div className="relative min-h-[150px] overflow-hidden px-4 py-3 md:min-h-[170px] md:px-5 md:py-4">
+        <section className="city-reader" data-reading={readingOpen ? 'open' : 'closed'}>
+          <button
+            type="button"
+            onClick={() => setReadingOpen((open) => !open)}
+            aria-expanded={readingOpen}
+            className="flex h-10 w-full cursor-pointer items-center justify-between border-b border-current px-4 text-[8px] font-black tracking-[0.16em] uppercase transition hover:bg-[var(--city-accent)]"
+          >
+            <span className="flex items-center gap-3"><span className="text-base">文</span><span>{isCn ? (readingOpen ? '返回城市' : '阅读城市') : (readingOpen ? 'Return to city' : 'Read the city')}</span></span>
+            <span className="flex items-center gap-3"><span>{String(safePageIndex + 1).padStart(2, '0')} / {String(pages.length).padStart(2, '0')}</span>{readingOpen ? <X className="h-3.5 w-3.5" /> : <ArrowLeft className="h-3.5 w-3.5" />}</span>
+          </button>
+
+          <div className="relative overflow-hidden px-5 py-4 md:px-7 md:py-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${language}-${safePageIndex}`}
@@ -95,7 +110,7 @@ export default function CityExperience({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -14 }}
                 transition={{ duration: 0.25 }}
-                className="prose-city text-[clamp(.76rem,1.15vw,1rem)] leading-[1.65] font-semibold"
+                className="prose-city text-[clamp(.78rem,1.1vw,1rem)] leading-[1.7] font-semibold"
               >
                 <ReactMarkdown>{pages[safePageIndex]}</ReactMarkdown>
               </motion.div>
@@ -122,13 +137,6 @@ export default function CityExperience({
             </button>
           </div>
         </section>
-
-        {prevCity ? (
-          <Link href={`/works/invisible-cities/${prevCity.type}/${prevCity.name}`} aria-label={`Previous city: ${prevCity.name}`} className="absolute top-1/2 left-0 z-40 hidden -translate-y-1/2 border border-l-0 border-current bg-[var(--city-paper)] p-3 transition hover:bg-[var(--city-accent)] md:block"><ArrowLeft className="h-4 w-4" /></Link>
-        ) : null}
-        {nextCity ? (
-          <Link href={`/works/invisible-cities/${nextCity.type}/${nextCity.name}`} aria-label={`Next city: ${nextCity.name}`} className="absolute top-1/2 right-0 z-40 hidden -translate-y-1/2 border border-r-0 border-current bg-[var(--city-paper)] p-3 transition hover:bg-[var(--city-accent)] md:block"><ArrowRight className="h-4 w-4" /></Link>
-        ) : null}
       </main>
     </article>
   )
