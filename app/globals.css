@@ -220,6 +220,29 @@
   right: min(34vw, 520px);
 }
 
+.city-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+}
+
+.city-identity {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.75rem;
+  max-width: calc(100% - clamp(170px, 28vw, 300px) - 8rem);
+}
+
+.city-artwork {
+  pointer-events: auto;
+  position: absolute;
+  top: 1.75rem;
+  right: calc(44px + 1.75rem);
+  z-index: 20;
+  width: clamp(170px, 28vw, 300px);
+}
+
 .city-reader {
   position: absolute;
   inset-block: 0;
@@ -307,6 +330,29 @@
 }
 
 @media (width < 768px) {
+  .city-overlay {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1rem 1rem 3.5rem;
+  }
+
+  .city-identity {
+    position: relative;
+    top: auto;
+    left: auto;
+    max-width: 100%;
+  }
+
+  .city-artwork {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(68vw, 260px);
+    max-width: calc(100% - 1.5rem);
+    align-self: flex-end;
+  }
+
   .city-stage[data-reading='open'] {
     right: 0;
     bottom: min(42svh, 360px);
