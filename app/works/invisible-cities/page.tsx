@@ -1,208 +1,126 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { ArrowLeft, ArrowUpRight } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import data from '@/public/works/invisible-cities/data.json'
-import { getCityTheme } from '@/lib/themes'
-import { cn } from '@/lib/utils'
-import { Sparkles, Wind, Eye, Scroll, Map, Box, Cloud, Activity, Ghost, Lock } from 'lucide-react'
 import { useLanguage } from '@/app/context/LanguageContext'
 
-// Map icons to city types
-const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  memory: Scroll,
-  desire: Sparkles,
-  signs: Map,
-  thin: Wind,
-  trading: Box,
-  eyes: Eye,
-  names: Activity,
-  dead: Ghost,
-  sky: Cloud,
-  continuous: Activity,
-  hidden: Lock,
+const categories = [
+  { type: 'memory', cn: '城市与记忆', en: 'Cities & Memory', mark: '记', color: '#d6b16f' },
+  { type: 'desire', cn: '城市与欲望', en: 'Cities & Desire', mark: '欲', color: '#ff3b31' },
+  { type: 'signs', cn: '城市与符号', en: 'Cities & Signs', mark: '符', color: '#44b6a8' },
+  { type: 'thin', cn: '轻盈的城市', en: 'Thin Cities', mark: '轻', color: '#c7dce4' },
+  { type: 'trading', cn: '贸易的城市', en: 'Trading Cities', mark: '易', color: '#efa83b' },
+  { type: 'eyes', cn: '城市与眼睛', en: 'Cities & Eyes', mark: '目', color: '#3c95ff' },
+  { type: 'names', cn: '城市与名字', en: 'Cities & Names', mark: '名', color: '#d15380' },
+  { type: 'dead', cn: '城市与死者', en: 'Cities & the Dead', mark: '死', color: '#9b8fc4' },
+  { type: 'sky', cn: '城市与天空', en: 'Cities & the Sky', mark: '天', color: '#f5cb45' },
+  { type: 'continuous', cn: '连绵的城市', en: 'Continuous Cities', mark: '∞', color: '#73a95a' },
+  { type: 'hidden', cn: '隐蔽的城市', en: 'Hidden Cities', mark: '隐', color: '#e06a47' },
+]
+
+const copy = {
+  cn: {
+    kicker: '一部关于欲望、记忆与语言的不可穷尽地图',
+    titleA: '不存在的',
+    titleB: '五十五座城',
+    instruction: '移动你的目光。每一组城市都会重绘这张地图。',
+    dialogue: '“你讲述的每座城市，都像威尼斯。”',
+    answer: '“每次描述一座城市，我都在谈论威尼斯。”',
+    choose: '选择一种观看方式',
+    enter: '进入这个系列',
+  },
+  en: {
+    kicker: 'An inexhaustible atlas of desire, memory and language',
+    titleA: 'Fifty-five cities',
+    titleB: 'that do not exist',
+    instruction: 'Move your gaze. Each family redraws the atlas.',
+    dialogue: '“Every city you describe resembles Venice.”',
+    answer: '“Every time I describe a city, I am saying something about Venice.”',
+    choose: 'Choose a way of seeing',
+    enter: 'Enter this series',
+  },
 }
 
-// Helper to extract hex color from Tailwind class "bg-[#...]"
-const getBgColor = (bgClass: string) => {
-  const match = bgClass.match(/bg-\[(#[0-9A-Fa-f]+)\]/)
-  return match ? match[1] : '#000000'
-}
-
-export default function CityCategoriesPage() {
+export default function InvisibleCitiesAtlas() {
   const { language } = useLanguage()
-  const [activeType, setActiveType] = useState<string | null>(null)
-
-  // Extract unique city types
-  const cityTypes = useMemo(() => {
-    const types = new Set(data.cities.map((city) => city.type))
-    return Array.from(types).sort()
-  }, [])
-
-  // Default background color
-  const defaultBg = '#0c0a09' // stone-950
-
-  // Get current background color based on active type
-  const currentBg = activeType ? getBgColor(getCityTheme(activeType).colors.bg) : defaultBg
+  const isCn = language === 'cn'
+  const text = copy[language]
+  const [activeType, setActiveType] = useState('memory')
+  const activeCategory = categories.find((category) => category.type === activeType)!
+  const activeCities = data.cities.filter((city) => city.type === activeType)
 
   return (
-    <motion.div
-      className="relative min-h-screen w-full overflow-hidden transition-colors duration-700 ease-in-out"
-      animate={{ backgroundColor: currentBg }}
-      initial={{ backgroundColor: defaultBg }}
-    >
-      {/* Ambient Noise Texture */}
-      <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.03]" />
+    <main className="min-h-screen overflow-hidden bg-[#11110f] text-[#ece9df] selection:bg-[#ff3b31]">
+      <header className="grid grid-cols-[1fr_auto] items-center border-b border-white/30 px-4 py-4 md:grid-cols-3 md:px-7">
+        <Link href="/" className="flex items-center gap-2 text-[10px] font-black tracking-[.18em] uppercase hover:text-[#ff3b31]">
+          <ArrowLeft className="h-4 w-4" /> Calvino
+        </Link>
+        <span className="hidden text-center text-[10px] font-black tracking-[.2em] uppercase md:block">Le città invisibili / 1972</span>
+        <span className="justify-self-end text-[10px] font-black tracking-[.18em]">55 × 11</span>
+      </header>
 
-      {/* Header */}
-      <div className="pointer-events-none absolute top-0 left-0 z-20 flex w-full items-center justify-between p-8">
-        <div className="pointer-events-auto">
-          <Link
-            href="/"
-            className="font-display text-2xl font-bold text-white opacity-80 mix-blend-difference transition-opacity hover:opacity-100"
-          >
-            INVISIBLE CITIES
-          </Link>
+      <section className="relative border-b border-white/30 px-4 pt-8 pb-10 md:px-7 md:pt-12">
+        <p className="mb-8 text-[10px] font-black tracking-[.22em] uppercase text-[#ff6a4e]">{text.kicker}</p>
+        <h1 className="relative z-10 text-[clamp(4.2rem,13vw,12.5rem)] leading-[.7] font-black tracking-[-.095em] uppercase">
+          {text.titleA}<br/><span className="ml-[8vw] text-[#ff6a4e]">{text.titleB}</span>
+        </h1>
+        <div className="mt-12 grid gap-8 md:grid-cols-[1fr_1.4fr] md:items-end">
+          <p className="max-w-sm text-sm leading-relaxed font-bold">{text.instruction}</p>
+          <div className="grid grid-cols-2 gap-4 text-xs leading-relaxed md:text-sm"><p>{text.dialogue}</p><p className="text-[#ff6a4e]">{text.answer}</p></div>
         </div>
-        <div className="hidden text-right text-white mix-blend-difference md:block">
-          <p className="font-serif text-sm italic opacity-60">
-            &ldquo;The catalog of forms is endless...&rdquo;
-          </p>
-        </div>
-      </div>
+      </section>
 
-      {/* Main Content - Horizontal Accordion */}
-      <div className="flex h-screen w-full flex-col items-stretch justify-center overflow-y-auto md:flex-row md:overflow-hidden">
-        {cityTypes.map((type) => {
-          const theme = getCityTheme(type)
-          const isActive = activeType === type
-          const Icon = TYPE_ICONS[type] || Sparkles
-
-          return (
-            <motion.div
-              key={type}
-              layout
-              onHoverStart={() => setActiveType(type)}
-              onHoverEnd={() => setActiveType(null)}
-              onClick={() => setActiveType(isActive ? null : type)} // For mobile tap
-              className={cn(
-                'relative shrink-0 cursor-pointer overflow-hidden border-b border-white/10 md:border-r md:border-b-0',
-                'flex flex-col items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] md:flex-row',
-                isActive ? 'flex-3 md:flex-4' : 'flex-1'
-              )}
-              style={{
-                minHeight: '100px', // Mobile min height
-              }}
-            >
-              {/* Link Overlay for Navigation when Active */}
-              {isActive && (
-                <Link
-                  href={`/works/invisible-cities/${type}`}
-                  className="absolute inset-0 z-50"
-                  aria-label={`Explore ${theme.label}`}
-                />
-              )}
-
-              {/* Background Overlay for inactive state */}
-              <div
-                className={cn(
-                  'absolute inset-0 transition-opacity duration-500',
-                  isActive ? 'opacity-100' : 'opacity-0'
-                )}
+      <section className="grid min-h-[82vh] border-b border-white/30 lg:grid-cols-[minmax(360px,.72fr)_1.28fr]">
+        <div className="border-b border-white/30 lg:border-r lg:border-b-0">
+          <p className="border-b border-white/30 px-5 py-3 text-[9px] font-black tracking-[.22em] uppercase">{text.choose}</p>
+          {categories.map((category, index) => {
+            const active = category.type === activeType
+            return (
+              <button
+                key={category.type}
+                type="button"
+                onMouseEnter={() => setActiveType(category.type)}
+                onFocus={() => setActiveType(category.type)}
+                onClick={() => setActiveType(category.type)}
+                className="group grid w-full cursor-pointer grid-cols-[3rem_1fr_auto] items-center border-b border-white/20 text-left transition"
+                style={{ background: active ? category.color : 'transparent', color: active ? '#11110f' : 'inherit' }}
               >
-                <div className={cn('absolute inset-0 opacity-20', theme.colors.bg)} />
+                <span className="grid h-full min-h-16 place-items-center border-r border-current/30 text-[10px] font-black">{String(index + 1).padStart(2, '0')}</span>
+                <span className="px-4 text-[clamp(1.2rem,2.5vw,2.3rem)] leading-none font-black tracking-[-.05em] uppercase">{isCn ? category.cn : category.en}</span>
+                <span className="px-5 text-2xl transition group-hover:rotate-12 group-hover:scale-125">{category.mark}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="relative min-h-[70vh] overflow-hidden" style={{ background: activeCategory.color }}>
+          <AnimatePresence mode="wait">
+            <motion.div key={activeType} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0">
+              <div className="absolute inset-0 grid grid-cols-5">
+                {activeCities.map((city, index) => (
+                  <Link key={city.name} href={`/works/invisible-cities/${city.type}/${city.name}`} className="group relative overflow-hidden border-r border-black/30">
+                    <Image src={`/works/invisible-cities/${city.type}/${city.name}.png`} alt="" fill className="object-cover grayscale opacity-30 mix-blend-multiply transition duration-700 group-hover:scale-125 group-hover:opacity-80 group-hover:grayscale-0" />
+                    <span className="absolute top-4 left-1/2 -translate-x-1/2 text-[9px] font-black text-black/60">0{index + 1}</span>
+                    <span className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 text-[clamp(1.8rem,4vw,4.5rem)] leading-none font-black tracking-[-.06em] text-[#11110f] uppercase [writing-mode:vertical-rl] transition group-hover:[writing-mode:horizontal-tb]">{isCn ? city.cnName : city.name}</span>
+                  </Link>
+                ))}
               </div>
-
-              {/* Content Container */}
-              <div className="relative z-10 flex h-full w-full flex-col items-center justify-center p-4 md:flex-row md:p-8">
-                {/* Vertical Title (Collapsed State) */}
-                <div
-                  className={cn(
-                    'absolute flex items-center justify-center transition-all duration-500 md:static',
-                    isActive ? 'pointer-events-none scale-90 opacity-0' : 'scale-100 opacity-100'
-                  )}
-                >
-                  <div className="flex flex-row items-center gap-4 md:flex-col">
-                    <Icon
-                      className={cn(
-                        'h-6 w-6 opacity-70 md:h-8 md:w-8',
-                        isActive ? theme.colors.text : 'text-white/50'
-                      )}
-                    />
-                    <h2 className="font-display text-xl tracking-widest whitespace-nowrap text-white/70 uppercase md:text-2xl md:[writing-mode:vertical-rl]">
-                      {language === 'en' ? theme.label : theme.cnLabel}
-                    </h2>
-                  </div>
-                </div>
-
-                {/* Expanded Content */}
-                <div
-                  className={cn(
-                    'absolute inset-0 flex flex-col items-center justify-center p-8 text-center transition-all delay-100 duration-500',
-                    isActive
-                      ? 'translate-y-0 opacity-100'
-                      : 'pointer-events-none translate-y-10 opacity-0'
-                  )}
-                >
-                  <motion.div
-                    initial={false}
-                    animate={isActive ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex max-w-lg flex-col items-center"
-                  >
-                    <motion.div
-                      animate={{ rotate: isActive ? 360 : 0 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                      className={cn(
-                        'mb-6 inline-block rounded-full bg-white/10 p-4 backdrop-blur-sm',
-                        theme.colors.text
-                      )}
-                    >
-                      <Icon className="h-12 w-12" />
-                    </motion.div>
-
-                    <h2
-                      className={cn(
-                        'font-display mb-4 text-5xl font-bold md:text-7xl',
-                        theme.colors.text
-                      )}
-                    >
-                      {language === 'en' ? theme.label : theme.cnLabel}
-                    </h2>
-
-                    <p
-                      className={cn(
-                        'mx-auto mb-12 max-w-md font-serif text-lg italic opacity-80 md:text-xl',
-                        theme.colors.text
-                      )}
-                    >
-                      {type.toUpperCase()}
-                    </p>
-
-                    {/* Creative "Enter" Cue */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.8 }}
-                      className={cn('flex flex-col items-center gap-2', theme.colors.text)}
-                    >
-                      <span className="text-[10px] tracking-[0.5em] uppercase opacity-60">
-                        Tap to Enter
-                      </span>
-                      <motion.div
-                        animate={{ height: [0, 40, 0], opacity: [0, 1, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                        className={cn('w-px bg-current opacity-50')}
-                      />
-                    </motion.div>
-                  </motion.div>
-                </div>
+              <div className="pointer-events-none absolute top-1/2 left-1/2 grid h-44 w-44 -translate-1/2 place-items-center rounded-full border border-black bg-[#11110f] text-center text-[#ece9df] shadow-2xl">
+                <span className="text-6xl font-black">{activeCategory.mark}</span>
               </div>
             </motion.div>
-          )
-        })}
-      </div>
-    </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
+
+      <Link href={`/works/invisible-cities/${activeType}`} className="group flex items-center justify-between bg-[#ece9df] px-5 py-7 text-[#11110f] transition hover:bg-[#ff6a4e] md:px-8">
+        <span className="text-[clamp(2rem,5vw,5rem)] font-black tracking-[-.06em] uppercase">{text.enter}: {isCn ? activeCategory.cn : activeCategory.en}</span>
+        <ArrowUpRight className="h-10 w-10 transition group-hover:translate-x-2 group-hover:-translate-y-2 md:h-16 md:w-16" />
+      </Link>
+    </main>
   )
 }

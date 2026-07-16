@@ -67,10 +67,10 @@ export default function CityExperience({
             initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
             animate={{ clipPath: 'inset(0 0 0 0)', opacity: 1 }}
             transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-[420px] justify-self-center md:sticky md:top-8"
+            className="group w-full max-w-[420px] justify-self-center transition duration-500 ease-out hover:-translate-y-2 hover:scale-[1.035] hover:drop-shadow-[12px_16px_0_var(--city-accent)] md:sticky md:top-8"
           >
             <div className="relative aspect-[4/3] max-h-[320px] overflow-hidden border border-current bg-black/5">
-              <Image src={imageUrl} alt="" fill priority className="object-cover grayscale contrast-125 mix-blend-multiply" />
+              <Image src={imageUrl} alt="" fill priority className="object-cover grayscale contrast-125 mix-blend-multiply transition duration-700 ease-out group-hover:scale-110 group-hover:grayscale-0" />
               <div className="absolute inset-0 opacity-15 mix-blend-color" style={{ background: direction.accent }} />
             </div>
             <figcaption className="mt-3 flex justify-between text-[9px] font-black tracking-[0.16em] uppercase opacity-60">
