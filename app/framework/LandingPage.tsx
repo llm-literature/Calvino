@@ -20,8 +20,8 @@ const copy = {
   },
   en: {
     eyebrow: 'ITALO CALVINO / DIGITAL EXPERIMENTS',
-    lead: 'We do not explain Calvino.',
-    leadAccent: 'We enter him.',
+    lead: 'Where reading ends,',
+    leadAccent: 'another world begins to grow.',
     index: 'Works index',
     enter: 'Enter the work',
     soon: 'In construction',
