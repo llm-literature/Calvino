@@ -201,6 +201,12 @@
   }
 }
 
+@keyframes category-conveyor {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

@@ -1,12 +1,10 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, ArrowUpRight } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { ArrowLeft } from 'lucide-react'
 import { useLanguage } from '@/app/context/LanguageContext'
 import { City } from '@/lib/types'
-import { cityDirections } from '../art-direction'
+import { categoryScenes } from '../scenes/CategoryScenes'
 
 const categoryDirections: Record<string, { cn: string; en: string; instruction: string; cnInstruction: string; mode: string }> = {
   memory: { cn: '城市与记忆', en: 'Cities & Memory', instruction: 'Read backward. Every city is already a ruin in the mind.', cnInstruction: '向后阅读。每座城市在记忆里都已成为废墟。', mode: '01 / PALIMPSEST' },
@@ -26,6 +24,7 @@ export default function CategoryExperience({ cities, category }: { cities: City[
   const { language } = useLanguage()
   const direction = categoryDirections[category]
   const isCn = language === 'cn'
+  const Scene = categoryScenes[category]
 
   return (
     <main className={`category-experience category-${category} min-h-screen bg-[#e9e7df] text-[#151513]`}>
@@ -36,47 +35,12 @@ export default function CategoryExperience({ cities, category }: { cities: City[
         <span className="text-[10px] font-black tracking-[0.18em]">{direction.mode}</span>
       </header>
 
-      <section className="grid border-b border-black md:grid-cols-[2fr_1fr]">
-        <h1 className="p-5 text-[clamp(4rem,12vw,11rem)] leading-[0.76] font-black tracking-[-0.09em] uppercase md:p-8">
-          {isCn ? direction.cn : direction.en}
-        </h1>
-        <div className="flex items-end border-t border-black p-5 md:border-t-0 md:border-l md:p-8">
-          <p className="max-w-sm text-lg leading-tight font-bold">{isCn ? direction.cnInstruction : direction.instruction}</p>
-        </div>
-      </section>
-
-      <section className="grid md:grid-cols-5">
-        {cities.map((city, index) => {
-          const art = cityDirections[city.name]
-          return (
-            <motion.div
-              key={city.name}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.08 }}
-              className="group relative min-h-[62vh] overflow-hidden border-b border-black md:border-r"
-              style={{ background: art.paper, color: art.ink }}
-            >
-              <Link href={`/works/invisible-cities/${category}/${city.name}`} className="absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-5">
-                <div className="flex justify-between text-[9px] font-black tracking-[0.16em] uppercase">
-                  <span>0{index + 1}</span><ArrowUpRight className="h-4 w-4" />
-                </div>
-                <h2 className="relative z-10 text-[clamp(2.6rem,5vw,5.5rem)] leading-[0.78] font-black tracking-[-0.07em] uppercase [writing-mode:vertical-rl] group-hover:[writing-mode:horizontal-tb]">
-                  {isCn ? city.cnName : city.name}
-                </h2>
-                <p className="text-[9px] leading-tight font-black tracking-[0.12em] uppercase">{isCn ? art.cnSignal : art.signal}</p>
-              </Link>
-              <Image
-                src={`/works/invisible-cities/${category}/${city.name}.png`}
-                alt=""
-                fill
-                className="object-cover opacity-0 grayscale mix-blend-multiply transition-all duration-500 group-hover:scale-110 group-hover:opacity-60"
-              />
-              <div className="absolute inset-x-0 bottom-0 h-2" style={{ background: art.accent }} />
-            </motion.div>
-          )
-        })}
-      </section>
+      <Scene
+        cities={cities}
+        cn={isCn}
+        title={isCn ? direction.cn : direction.en}
+        instruction={isCn ? direction.cnInstruction : direction.instruction}
+      />
     </main>
   )
 }

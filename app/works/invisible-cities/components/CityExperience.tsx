@@ -24,7 +24,9 @@ export default function CityExperience({
   const { language } = useLanguage()
   const direction = cityDirections[city.name.toLowerCase()]
   const isCn = language === 'cn'
-  const description = isCn ? city.cnDescription : city.enDescription
+  // A few source passages contain literal backslash-n markers inherited from
+  // print-layout line wrapping. They are not semantic paragraph breaks.
+  const description = (isCn ? city.cnDescription : city.enDescription).replace(/\\n/g, '')
   const displayName = isCn ? city.cnName : city.name
   const signal = isCn ? direction.cnSignal : direction.signal
   const Scene = cityScenes[city.name.toLowerCase()]
