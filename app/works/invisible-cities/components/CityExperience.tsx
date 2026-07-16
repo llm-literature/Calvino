@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ArrowLeft, ArrowRight, Grid2X2, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
@@ -24,6 +25,7 @@ export default function CityExperience({
   imageUrl: string
 }) {
   const { language } = useLanguage()
+  const router = useRouter()
   const [pageIndex, setPageIndex] = useState(0)
   const [readingOpen, setReadingOpen] = useState(false)
   const direction = cityDirections[city.name.toLowerCase()]
@@ -37,17 +39,58 @@ export default function CityExperience({
   )
   const safePageIndex = Math.min(pageIndex, pages.length - 1)
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null
+      if (target?.closest('a, button, input, textarea, select')) return
+
+      if (event.key === 'ArrowLeft') {
+        if (readingOpen && safePageIndex > 0) {
+          setPageIndex((index) => Math.max(0, index - 1))
+        } else if (!readingOpen && prevCity) {
+          router.push(`/works/invisible-cities/${prevCity.type}/${prevCity.name}`)
+        }
+      }
+
+      if (event.key === 'ArrowRight') {
+        if (readingOpen && safePageIndex < pages.length - 1) {
+          setPageIndex((index) => Math.min(pages.length - 1, index + 1))
+        } else if (!readingOpen && nextCity) {
+          router.push(`/works/invisible-cities/${nextCity.type}/${nextCity.name}`)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [nextCity, pages.length, prevCity, readingOpen, router, safePageIndex])
+
   return (
     <article
       className="city-experience relative h-[100svh] overflow-hidden"
       style={{ color: direction.ink, background: direction.paper, '--city-accent': direction.accent, '--city-paper': direction.paper } as React.CSSProperties}
     >
-      <header className="relative z-50 grid h-10 grid-cols-[1fr_auto_1fr] items-center border-b border-current bg-[var(--city-paper)] px-4 text-[9px] font-black tracking-[0.18em] uppercase backdrop-blur-md md:px-6">
-        <Link href="/works/invisible-cities" className="flex items-center gap-2 hover:opacity-50">
-          <Grid2X2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Atlas</span>
+      <header className="relative z-50 grid h-10 grid-cols-[1fr_auto_1fr] items-stretch border-b border-current bg-[var(--city-paper)] text-[8px] font-black tracking-[0.14em] uppercase backdrop-blur-md md:text-[9px]">
+        {prevCity ? (
+          <Link href={`/works/invisible-cities/${prevCity.type}/${prevCity.name}`} className="group flex min-w-0 items-center gap-2 border-r border-current px-3 transition hover:bg-[var(--city-accent)] md:px-5">
+            <ArrowLeft className="h-3.5 w-3.5 shrink-0 transition group-hover:-translate-x-1" />
+            <span className="hidden truncate sm:inline">{isCn ? prevCity.cnName : prevCity.name}</span>
+            <span className="sm:hidden">{isCn ? '上一城' : 'Prev'}</span>
+          </Link>
+        ) : <span className="border-r border-current" />}
+
+        <Link href="/works/invisible-cities" className="flex items-center gap-2 px-3 transition hover:bg-[var(--city-accent)] md:px-5">
+          <Grid2X2 className="h-3.5 w-3.5" />
+          <span className="hidden md:inline">{city.type} / </span>{city.name}
         </Link>
-        <span>{city.type} / {city.name}</span>
-        <Link href="/" className="justify-self-end hover:opacity-50">Calvino®</Link>
+
+        {nextCity ? (
+          <Link href={`/works/invisible-cities/${nextCity.type}/${nextCity.name}`} className="group flex min-w-0 items-center justify-end gap-2 border-l border-current px-3 transition hover:bg-[var(--city-accent)] md:px-5">
+            <span className="hidden truncate sm:inline">{isCn ? nextCity.cnName : nextCity.name}</span>
+            <span className="sm:hidden">{isCn ? '下一城' : 'Next'}</span>
+            <ArrowRight className="h-3.5 w-3.5 shrink-0 transition group-hover:translate-x-1" />
+          </Link>
+        ) : <Link href="/" className="flex items-center justify-end border-l border-current px-3 hover:bg-[var(--city-accent)]">Calvino®</Link>}
       </header>
 
       <main className="relative h-[calc(100svh-2.5rem)] overflow-hidden">
@@ -83,12 +126,6 @@ export default function CityExperience({
           </figcaption>
         </motion.figure>
 
-        {prevCity ? (
-          <Link href={`/works/invisible-cities/${prevCity.type}/${prevCity.name}`} aria-label={`Previous city: ${prevCity.name}`} className="absolute top-1/2 left-0 z-40 hidden -translate-y-1/2 border border-l-0 border-current bg-[var(--city-paper)] p-3 transition hover:bg-[var(--city-accent)] md:block"><ArrowLeft className="h-4 w-4" /></Link>
-        ) : null}
-        {nextCity ? (
-          <Link href={`/works/invisible-cities/${nextCity.type}/${nextCity.name}`} aria-label={`Next city: ${nextCity.name}`} className="absolute top-1/2 right-0 z-40 hidden -translate-y-1/2 border border-r-0 border-current bg-[var(--city-paper)] p-3 transition hover:bg-[var(--city-accent)] md:block"><ArrowRight className="h-4 w-4" /></Link>
-        ) : null}
         </div>
 
         <section className="city-reader" data-reading={readingOpen ? 'open' : 'closed'}>
