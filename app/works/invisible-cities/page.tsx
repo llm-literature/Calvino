@@ -45,6 +45,62 @@ const copy = {
   },
 }
 
+type Category = (typeof categories)[number]
+type AtlasCity = (typeof data.cities)[number]
+
+function CategoryPreview({
+  category,
+  cities,
+  isCn,
+  className = '',
+}: {
+  category: Category
+  cities: AtlasCity[]
+  isCn: boolean
+  className?: string
+}) {
+  return (
+    <div
+      className={`relative min-h-[420px] overflow-hidden lg:min-h-[70vh] ${className}`}
+      style={{ background: category.color }}
+    >
+      <motion.div
+        key={category.type}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="absolute inset-0"
+      >
+        <div className="absolute inset-0 grid grid-cols-5">
+          {cities.map((city, index) => (
+            <Link
+              key={city.name}
+              href={`/works/invisible-cities/${city.type}/${city.name}`}
+              className="group relative overflow-hidden border-r border-black/30 last:border-r-0"
+            >
+              <Image
+                src={`/works/invisible-cities/${city.type}/${city.name}.png`}
+                alt=""
+                fill
+                className="object-cover opacity-30 mix-blend-multiply grayscale transition duration-700 group-hover:scale-125 group-hover:opacity-80 group-hover:grayscale-0"
+              />
+              <span className="absolute top-4 left-1/2 -translate-x-1/2 text-[9px] font-black text-black/60">
+                0{index + 1}
+              </span>
+              <span className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 text-[clamp(1.45rem,4vw,4.5rem)] leading-none font-black tracking-[-.06em] text-[#11110f] uppercase transition [writing-mode:vertical-rl] group-hover:[writing-mode:horizontal-tb]">
+                {isCn ? city.cnName : city.name}
+              </span>
+            </Link>
+          ))}
+        </div>
+        <div className="pointer-events-none absolute top-1/2 left-1/2 grid h-28 w-28 -translate-1/2 place-items-center rounded-full border border-black bg-[#11110f] text-center text-[#ece9df] shadow-2xl lg:h-44 lg:w-44">
+          <span className="text-4xl font-black lg:text-6xl">{category.mark}</span>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 export default function InvisibleCitiesAtlas() {
   const { language } = useLanguage()
   const isCn = language === 'cn'
@@ -94,77 +150,80 @@ export default function InvisibleCitiesAtlas() {
           {categories.map((category, index) => {
             const active = category.type === activeType
             return (
-              <button
-                key={category.type}
-                type="button"
-                onMouseEnter={() => setActiveType(category.type)}
-                onFocus={() => setActiveType(category.type)}
-                onClick={() => setActiveType(category.type)}
-                className="group grid w-full cursor-pointer grid-cols-[3rem_1fr_auto] items-center border-b border-white/20 text-left transition"
-                style={{
-                  background: active ? category.color : 'transparent',
-                  color: active ? '#11110f' : 'inherit',
-                }}
-              >
-                <span className="grid h-full min-h-16 place-items-center border-r border-current/30 text-[10px] font-black">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <span className="px-4 text-[clamp(1.2rem,2.5vw,2.3rem)] leading-none font-black tracking-[-.05em] uppercase">
-                  {isCn ? category.cn : category.en}
-                </span>
-                <span className="px-5 text-2xl transition group-hover:scale-125 group-hover:rotate-12">
-                  {category.mark}
-                </span>
-              </button>
+              <div key={category.type}>
+                <button
+                  type="button"
+                  aria-expanded={active}
+                  aria-controls={`category-preview-${category.type}`}
+                  onMouseEnter={() => setActiveType(category.type)}
+                  onFocus={() => setActiveType(category.type)}
+                  onClick={() => setActiveType(category.type)}
+                  className="group grid w-full cursor-pointer grid-cols-[3rem_1fr_auto] items-center border-b border-white/20 text-left transition"
+                  style={{
+                    background: active ? category.color : 'transparent',
+                    color: active ? '#11110f' : 'inherit',
+                  }}
+                >
+                  <span className="grid h-full min-h-16 place-items-center border-r border-current/30 text-[10px] font-black">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="px-4 text-[clamp(1.2rem,2.5vw,2.3rem)] leading-none font-black tracking-[-.05em] uppercase">
+                    {isCn ? category.cn : category.en}
+                  </span>
+                  <span className="px-5 text-2xl transition group-hover:scale-125 group-hover:rotate-12">
+                    {category.mark}
+                  </span>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {active && (
+                    <motion.div
+                      id={`category-preview-${category.type}`}
+                      key={`mobile-${category.type}`}
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      className="border-b border-white/30 lg:hidden"
+                    >
+                      <CategoryPreview
+                        category={category}
+                        cities={activeCities}
+                        isCn={isCn}
+                        className="h-[58svh]"
+                      />
+                      <Link
+                        href={`/works/invisible-cities/${category.type}`}
+                        className="group flex items-center justify-between bg-[#ece9df] px-5 py-5 text-[#11110f] transition hover:bg-[#ff6a4e]"
+                      >
+                        <span className="text-[clamp(1.35rem,6vw,2rem)] leading-none font-black tracking-[-.05em] uppercase">
+                          {text.enter}: {isCn ? category.cn : category.en}
+                        </span>
+                        <ArrowUpRight className="h-9 w-9 shrink-0 transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             )
           })}
         </div>
 
-        <div
-          className="relative min-h-[70vh] overflow-hidden"
-          style={{ background: activeCategory.color }}
-        >
+        <div className="relative hidden min-h-[70vh] overflow-hidden lg:block">
           <AnimatePresence mode="wait">
-            <motion.div
+            <CategoryPreview
               key={activeType}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              category={activeCategory}
+              cities={activeCities}
+              isCn={isCn}
               className="absolute inset-0"
-            >
-              <div className="absolute inset-0 grid grid-cols-5">
-                {activeCities.map((city, index) => (
-                  <Link
-                    key={city.name}
-                    href={`/works/invisible-cities/${city.type}/${city.name}`}
-                    className="group relative overflow-hidden border-r border-black/30"
-                  >
-                    <Image
-                      src={`/works/invisible-cities/${city.type}/${city.name}.png`}
-                      alt=""
-                      fill
-                      className="object-cover opacity-30 mix-blend-multiply grayscale transition duration-700 group-hover:scale-125 group-hover:opacity-80 group-hover:grayscale-0"
-                    />
-                    <span className="absolute top-4 left-1/2 -translate-x-1/2 text-[9px] font-black text-black/60">
-                      0{index + 1}
-                    </span>
-                    <span className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 text-[clamp(1.8rem,4vw,4.5rem)] leading-none font-black tracking-[-.06em] text-[#11110f] uppercase transition [writing-mode:vertical-rl] group-hover:[writing-mode:horizontal-tb]">
-                      {isCn ? city.cnName : city.name}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-              <div className="pointer-events-none absolute top-1/2 left-1/2 grid h-44 w-44 -translate-1/2 place-items-center rounded-full border border-black bg-[#11110f] text-center text-[#ece9df] shadow-2xl">
-                <span className="text-6xl font-black">{activeCategory.mark}</span>
-              </div>
-            </motion.div>
+            />
           </AnimatePresence>
         </div>
       </section>
 
       <Link
         href={`/works/invisible-cities/${activeType}`}
-        className="group flex items-center justify-between bg-[#ece9df] px-5 py-7 text-[#11110f] transition hover:bg-[#ff6a4e] md:px-8"
+        className="group hidden items-center justify-between bg-[#ece9df] px-5 py-7 text-[#11110f] transition hover:bg-[#ff6a4e] md:px-8 lg:flex"
       >
         <span className="text-[clamp(2rem,5vw,5rem)] font-black tracking-[-.06em] uppercase">
           {text.enter}: {isCn ? activeCategory.cn : activeCategory.en}

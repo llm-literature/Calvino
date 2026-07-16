@@ -131,42 +131,44 @@ export default function CityExperience({
 
           <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-40 bg-gradient-to-b from-black/25 to-transparent mix-blend-multiply" />
 
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="pointer-events-none absolute top-4 left-4 z-30 max-w-[62vw] md:top-6 md:left-7"
-          >
-            <p className="mb-2 max-w-md text-[8px] leading-relaxed font-black tracking-[0.16em] uppercase drop-shadow-sm md:text-[10px]">
-              {signal}
-            </p>
-            <h1 className="text-[clamp(2.8rem,7.5vw,7rem)] leading-[0.72] font-black tracking-[-0.09em] uppercase drop-shadow-[0_2px_0_rgba(255,255,255,.2)]">
-              {displayName}
-            </h1>
-          </motion.div>
+          <div className="city-overlay">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="city-identity"
+            >
+              <p className="mb-2 max-w-md text-[8px] leading-relaxed font-black tracking-[0.16em] uppercase drop-shadow-sm md:text-[10px]">
+                {signal}
+              </p>
+              <h1 className="text-[clamp(2.8rem,7.5vw,7rem)] leading-[0.72] font-black tracking-[-0.09em] break-words uppercase drop-shadow-[0_2px_0_rgba(255,255,255,.2)]">
+                {displayName}
+              </h1>
+            </motion.div>
 
-          <motion.figure
-            initial={{ opacity: 0, scale: 0.9, rotate: 3 }}
-            animate={{ opacity: 1, scale: 1, rotate: direction.angle / 2 }}
-            className="group absolute top-5 right-4 z-20 w-[28vw] max-w-[300px] min-w-[170px] origin-right transition duration-500 hover:z-40 hover:scale-110 hover:rotate-0 hover:drop-shadow-[10px_12px_0_var(--city-accent)] md:top-7 md:right-[calc(44px+1.75rem)]"
-          >
-            <div className="relative aspect-[4/3] overflow-hidden border border-current bg-black/10">
-              <Image
-                src={imageUrl}
-                alt=""
-                fill
-                priority
-                className="object-cover mix-blend-multiply contrast-125 grayscale transition duration-700 group-hover:scale-110 group-hover:grayscale-0"
-              />
-              <div
-                className="absolute inset-0 opacity-10 mix-blend-color transition group-hover:opacity-0"
-                style={{ background: direction.accent }}
-              />
-            </div>
-            <figcaption className="mt-1 flex justify-between text-[7px] font-black tracking-[0.14em] uppercase opacity-70">
-              <span>{city.name}</span>
-              <span>{city.type}</span>
-            </figcaption>
-          </motion.figure>
+            <motion.figure
+              initial={{ opacity: 0, scale: 0.9, rotate: 3 }}
+              animate={{ opacity: 1, scale: 1, rotate: direction.angle / 2 }}
+              className="city-artwork group origin-right transition duration-500 hover:z-40 hover:scale-110 hover:rotate-0 hover:drop-shadow-[10px_12px_0_var(--city-accent)]"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden border border-current bg-black/10">
+                <Image
+                  src={imageUrl}
+                  alt=""
+                  fill
+                  priority
+                  className="object-cover mix-blend-multiply contrast-125 grayscale transition duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                />
+                <div
+                  className="absolute inset-0 opacity-10 mix-blend-color transition group-hover:opacity-0"
+                  style={{ background: direction.accent }}
+                />
+              </div>
+              <figcaption className="mt-1 flex justify-between text-[7px] font-black tracking-[0.14em] uppercase opacity-70">
+                <span>{city.name}</span>
+                <span>{city.type}</span>
+              </figcaption>
+            </motion.figure>
+          </div>
         </div>
 
         <section className="city-reader" data-reading={readingOpen ? 'open' : 'closed'}>
