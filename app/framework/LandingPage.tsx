@@ -16,7 +16,7 @@ const copy = {
     index: '作品索引',
     enter: '进入作品',
     soon: '构建中',
-    note: '每一部作品，都是一次独立的数字实验。',
+    note: '阅读结束的地方，另一座世界开始生长。',
     language: 'EN',
   },
   en: {
@@ -26,7 +26,7 @@ const copy = {
     index: 'Works index',
     enter: 'Enter the work',
     soon: 'In construction',
-    note: 'Each work becomes an independent digital experiment.',
+    note: 'Where reading ends, another world begins to grow.',
     language: '中文',
   },
 }
