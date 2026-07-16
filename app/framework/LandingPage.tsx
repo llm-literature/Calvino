@@ -11,8 +11,8 @@ import { works } from './works'
 const copy = {
   cn: {
     eyebrow: '伊塔洛·卡尔维诺 / 数字创意档案',
-    lead: '我们不解释卡尔维诺。',
-    leadAccent: '我们进入他。',
+    lead: '阅读结束的地方，',
+    leadAccent: '另一座世界开始生长。',
     index: '作品索引',
     enter: '进入作品',
     soon: '构建中',
