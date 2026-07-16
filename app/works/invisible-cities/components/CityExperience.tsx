@@ -133,10 +133,18 @@ export default function CityExperience({
             type="button"
             onClick={() => setReadingOpen((open) => !open)}
             aria-expanded={readingOpen}
-            className="flex h-10 w-full cursor-pointer items-center justify-between border-b border-current px-4 text-[8px] font-black tracking-[0.16em] uppercase transition hover:bg-[var(--city-accent)]"
+            aria-label={isCn ? (readingOpen ? '返回城市场景' : '阅读城市正文') : (readingOpen ? 'Return to city scene' : 'Read city text')}
+            className="city-reader-toggle"
           >
-            <span className="flex items-center gap-3"><span className="text-base">文</span><span>{isCn ? (readingOpen ? '返回城市' : '阅读城市') : (readingOpen ? 'Return to city' : 'Read the city')}</span></span>
-            <span className="flex items-center gap-3"><span>{String(safePageIndex + 1).padStart(2, '0')} / {String(pages.length).padStart(2, '0')}</span>{readingOpen ? <X className="h-3.5 w-3.5" /> : <ArrowLeft className="h-3.5 w-3.5" />}</span>
+            <span className="city-reader-bookmark">
+              <span>{isCn ? '阅读城市' : 'Read city'}</span>
+              <span>{String(safePageIndex + 1).padStart(2, '0')}/{String(pages.length).padStart(2, '0')}</span>
+              <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+            </span>
+            <span className="city-reader-heading">
+              <span className="flex items-center gap-3"><span className="text-base">文</span><span>{isCn ? '返回城市' : 'Return to city'}</span></span>
+              <span className="flex items-center gap-3"><span>{String(safePageIndex + 1).padStart(2, '0')} / {String(pages.length).padStart(2, '0')}</span><X className="h-3.5 w-3.5" /></span>
+            </span>
           </button>
 
           <div className="relative overflow-hidden px-5 py-4 md:px-7 md:py-6">
