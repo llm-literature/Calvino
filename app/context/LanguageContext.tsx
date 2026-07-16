@@ -1,6 +1,7 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 type Language = 'en' | 'cn'
 
@@ -62,19 +63,25 @@ export const translations = {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>('cn')
+  const pathname = usePathname()
+  const routeLanguage: Language | null = pathname === '/en' ? 'en' : pathname === '/' ? 'cn' : null
+  const [language, setLanguage] = useState<Language>(routeLanguage ?? 'cn')
 
   useEffect(() => {
+    // The language-specific landing routes take precedence over a previously saved preference.
+    if (routeLanguage) return
+
     const savedLang = localStorage.getItem('language') as Language
-    if (savedLang) {
+    if (savedLang === 'en' || savedLang === 'cn') {
       setLanguage(savedLang)
     }
-  }, [])
+  }, [routeLanguage])
 
-  const handleSetLanguage = (lang: Language) => {
+  const handleSetLanguage = useCallback((lang: Language) => {
     setLanguage(lang)
     localStorage.setItem('language', lang)
-  }
+    document.documentElement.lang = lang === 'cn' ? 'zh-CN' : 'en'
+  }, [])
 
   const t = (key: string) => {
     // @ts-expect-error: Dynamic key access on translations object
