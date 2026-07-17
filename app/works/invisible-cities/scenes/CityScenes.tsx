@@ -46,7 +46,7 @@ function Isidora({ cn }: SceneProps) {
           </div>
         ))}
       </div>
-      <p className="absolute top-6 left-6 max-w-xs text-3xl font-black">
+      <p className="absolute bottom-16 left-5 max-w-[calc(100%_-_2.5rem)] text-2xl font-black md:bottom-6 md:left-6 md:max-w-xs md:text-3xl">
         {t(cn, '你年轻时渴望抵达。你年老时终于抵达。', 'You desired it young. You arrived old.')}
       </p>
     </div>
@@ -313,7 +313,7 @@ function Hypatia({ cn }: SceneProps) {
 function Olivia({ cn }: SceneProps) {
   return (
     <div className="scene scene-olivia relative h-full overflow-hidden bg-[#e3ce90] text-[#2a2112]">
-      <p className="absolute top-6 left-6 z-10 max-w-sm text-4xl font-black">
+      <p className="absolute bottom-16 left-5 z-10 max-w-[calc(100%_-_2.5rem)] text-3xl font-black md:bottom-6 md:left-6 md:max-w-sm md:text-4xl">
         {t(cn, '宫殿。流苏。喷泉。孔雀。', 'Palaces. Tassels. Fountains. Peacocks.')}
       </p>
       <div className="group absolute inset-0 grid place-items-center">
@@ -347,7 +347,7 @@ function Isaura({ cn }: SceneProps) {
           </i>
         ))}
       </div>
-      <p className="absolute top-6 left-6 max-w-sm text-3xl font-black">
+      <p className="absolute bottom-16 left-5 max-w-[calc(100%_-_2.5rem)] text-2xl font-black md:bottom-6 md:left-6 md:max-w-sm md:text-3xl">
         {t(
           cn,
           '移动水位。看不见的湖决定看得见的城市。',
@@ -372,7 +372,7 @@ function Zenodia({ cn }: SceneProps) {
           </div>
         ))}
       </div>
-      <p className="absolute top-5 left-5 max-w-md text-2xl font-black">
+      <p className="absolute bottom-16 left-5 max-w-[calc(100%_-_2.5rem)] text-xl font-black md:bottom-5 md:max-w-md md:text-2xl">
         {t(
           cn,
           '城市可以从欲望推知；幸福的城市却没有形状。',
@@ -585,7 +585,7 @@ function Valdrada({ cn }: SceneProps) {
 function Zemrude({ cn }: SceneProps) {
   return (
     <div className="scene scene-zemrude group relative h-full overflow-hidden bg-[#d5e4e7] text-[#172031]">
-      <div className="absolute inset-x-0 top-0 h-1/2 bg-[#f0a52b] p-8 text-5xl font-black transition group-hover:-translate-y-full">
+      <div className="absolute inset-x-0 top-0 flex h-1/2 items-end justify-center bg-[#f0a52b] p-8 pb-12 text-center text-4xl font-black transition group-hover:-translate-y-full md:text-5xl">
         {t(cn, '抬头：窗、旗帜、喷泉', 'LOOK UP: windows, flags, fountains')}
       </div>
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[#4a5568] p-8 text-5xl font-black text-white transition group-hover:translate-y-full">
@@ -701,7 +701,7 @@ function Leandra({ cn }: SceneProps) {
           )}
         </p>
       </div>
-      <p className="absolute top-5 left-1/2 -translate-x-1/2 bg-[#c75b39] px-5 py-2 text-xs font-black text-white">
+      <p className="absolute bottom-16 left-1/2 max-w-[calc(100%_-_2.5rem)] -translate-x-1/2 bg-[#c75b39] px-5 py-2 text-center text-xs font-black text-white md:top-5 md:bottom-auto md:max-w-none md:whitespace-nowrap">
         {t(cn, '听他们争论谁才是真正的莱安德拉', 'Hear them dispute the true Leandra')}
       </p>
     </div>
@@ -759,7 +759,7 @@ function Irene({ cn }: SceneProps) {
   return (
     <div className="scene scene-irene relative h-full overflow-hidden bg-[#281c2c] text-[#e6c4cb]">
       <div className="absolute inset-x-[10%] bottom-[18%] h-[35%] [background-size:32px_27px] blur-[2px] transition duration-[2000ms] [background:radial-gradient(circle_at_20%_30%,#ff785a_0_2px,transparent_3px),radial-gradient(circle_at_70%_60%,#ffcfb8_0_3px,transparent_4px)] hover:scale-[2.8] hover:blur-[18px]" />
-      <p className="absolute top-6 left-6 max-w-sm text-3xl font-black">
+      <p className="absolute bottom-16 left-5 max-w-[calc(100%_-_2.5rem)] text-2xl font-black md:bottom-6 md:left-6 md:max-w-sm md:text-3xl">
         {t(cn, '靠近她，远方的伊莱那就消失。', 'Approach her, and distant Irene disappears.')}
       </p>
     </div>
@@ -799,7 +799,7 @@ function Adelma({ cn }: SceneProps) {
         <div
           key={i}
           className="group absolute grid h-20 w-16 place-items-center rounded-[50%] border border-current bg-[#cbc5ba] transition hover:z-10 hover:scale-[2] hover:bg-[#98484d] hover:text-white"
-          style={{ left: `${4 + ((i * 23) % 88)}%`, top: `${5 + ((i * 31) % 76)}%` }}
+          style={{ left: `${4 + ((i * 23) % 88)}%`, top: `${13 + ((i * 31) % 68)}%` }}
         >
           <span className="text-2xl">◉</span>
           <small className="hidden text-center group-hover:block">
@@ -897,7 +897,7 @@ function Eudoxia({ cn }: SceneProps) {
 function Beersheba({ cn }: SceneProps) {
   return (
     <div className="scene scene-beersheba relative grid h-full grid-rows-3 bg-[#f0d88e] text-[#271c0e]">
-      <div className="grid place-items-center bg-[#6d55ff] text-3xl font-black text-white">
+      <div className="grid place-items-center bg-[#6d55ff] text-3xl font-black text-white md:pt-10">
         {t(cn, '想象中的黄金天城', 'IMAGINED GOLDEN HEAVEN')}
       </div>
       <div className="grid place-items-center border-y border-current text-3xl font-black">
@@ -950,7 +950,7 @@ function Perinthia({ cn }: SceneProps) {
           />
         ))}
       </div>
-      <p className="absolute top-5 left-5 max-w-sm font-black">
+      <p className="absolute bottom-16 left-5 max-w-[calc(100%_-_2.5rem)] font-black md:bottom-5 md:max-w-sm">
         {t(
           cn,
           '天文学家造出完美星城；街上出生的却全是怪物。',
@@ -998,7 +998,7 @@ function Leonia({ cn }: SceneProps) {
           </span>
         ))}
       </div>
-      <p className="absolute top-4 left-4 z-10 max-w-sm font-black text-white mix-blend-difference">
+      <p className="absolute bottom-16 left-4 z-10 max-w-[calc(100%_-_2rem)] font-black text-white mix-blend-difference md:bottom-4 md:max-w-sm">
         {t(
           cn,
           '每天早晨一切崭新；每天夜里城市更接近被自己的过去掩埋。',
@@ -1097,7 +1097,7 @@ function Olinda({ cn }: SceneProps) {
           <i key={i} className="border border-white" />
         ))}
       </div>
-      <p className="absolute top-5 left-5 max-w-xs font-black">
+      <p className="absolute bottom-16 left-5 max-w-[calc(100%_-_2.5rem)] font-black md:bottom-5 md:max-w-xs">
         {t(
           cn,
           '把指针留在针尖上。新城市从旧城市内部生长。',
